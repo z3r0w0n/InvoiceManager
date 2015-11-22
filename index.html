@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="invoiceMan">
+	<head>
+		<title>SteelBrick - Invoice Manager</title>
+
+		<link rel="stylesheet" href="style.css" />
+		
+		<!-- Bootstrap CDN -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+		<!-- AngularJS CDN -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+
+		<!-- Custom JS -->
+		<script type="text/javascript" src="invoice.js">
+		</script>
+
+	</head>
+
+	<body ng-controller="InvoiceController as invoiceCtrl">
+		<!--  Store Header  -->
+	    <header class="row text-center">
+	      <h1>Invoice Manager</h1>
+	    </header>
+
+	    <section class="col-md-6 col-md-offset-3" ng-controller="TabController as tab">
+			<ul class="nav nav-tabs">
+				<li ng-class="{ active:tab.isSet(1) }">
+				  	<a href="" ng-click="tab.setTab(1)">Invoice List</a>
+				</li>
+				<li ng-class="{ active:tab.isSet(2) }">
+				  	<a href="" ng-click="tab.setTab(2)">Create Invoice</a>
+				</li>
+			</ul>
+		    <div class="panel-body">
+		      	<div name="invoice" class="panel-body well" ng-show="tab.isSet(1)">
+		      		<p class="text-center">Previous Invoices</p>
+		      		<div class="list-group">
+					    <!--  Invoice Container  -->
+					    <div class="list-group-item" ng-repeat="invoice in invoiceCtrl.invoices">
+					      <h3>INV#{{invoice.invoiceNmbr}} <small>{{invoice.customerName}}</small> <em class="pull-right">{{invoice.totalPrice | currency}}</em></h3>
+					    </div>
+				    </div>
+
+				    <div class="text-center">
+				    	<button type="button" class="btn btn-primary" ng-click="tab.setTab(2)">Create Invoice</button>
+				    </div>
+		      		<!-- <h4 class="label label-info text-center">No Past Invoices</h4> -->
+		      	</div>
+
+		      	<div name="invoice-form" ng-show="tab.isSet(2)">
+		      		<form name="invoiceForm" ng-controller="CreateInvController as addInvCtrl"
+		      									ng-submit = "addInvCtrl.addInvoice(invoice)">
+		              
+		              <!--  Live Preview -->
+		              <!-- <h4>Preview:</h4>
+		              <blockquote>
+		                <strong>#{{addInvCtrl.invoice.invoiceNmbr}}</strong>
+		                {{addInvCtrl.invoice.customerName}} {{addInvCtrl.invoice.createdOn |date}}
+		                <cite class="clearfix">-{{addInvCtrl.invoice.totalPrice}}</cite>
+		                <div>{{addInvCtrl.invoice.lineItems}}</div>
+		              </blockquote> -->
+
+		              <!--  Invoice Form -->
+		              <h4>Create an Invoice</h4>
+		              <fieldset class="form-group">
+		                <input ng-model="addInvCtrl.invoice.customerName" type="text" class="form-control" placeholder="Customer Name" title="Name" required/>
+		              </fieldset>
+		              <fieldset class="form-group">
+		                <input ng-model="addInvCtrl.invoice.createdOn" type="date" class="form-control" placeholder="yyyy-MM-dd" required/>
+		              </fieldset>
+		              <fieldset class="form-group">
+		                <input ng-model="addInvCtrl.invoice.invoiceNmbr" type="text" pattern='\d{5}' class="form-control" placeholder="5 - digit Invoice number" title="Invoice Number" required/>
+		              </fieldset>
+
+		              <!-- {{addInvCtrl.totalPrice | currency}} -->
+
+			            <table class="table">
+			            	<tr class="list-group-item" ng-repeat="addedItem in addInvCtrl.selected">
+			            		<td width="40%"> {{addedItem.productName}} </td>
+			              		<td width="20%"><input type="number" min=1 ng-model="addedItem.quantity"></td>
+			             		<td width="20%"><input type="text" name="price" pattern="^\d*(\.\d{1,2}$)?" size="4" title="Price of product - Please enter proper Currency format (Ex: 12, 12.04)" ng-model="addedItem.price"></td>
+			             		<td width="20%">{{addedItem.price * addedItem.quantity | currency}}</td>
+			              	</tr>
+			            </table>
+
+				        <!-- {{addInvCtrl.selected}} -->
+
+				        <!-- <div class="well">{{addInvCtrl.invoice}}</div> -->
+				        <p class="bg-danger">{{addInvCtrl.errors[0]}}</p>
+				        <div class="row scrollable well text-center">
+				        	<div class="panel">
+				        		<input class="form-control" type="text" placeholder="Search here for products" ng-model="search.productName">
+				        	</div>
+						    <div class="col-sm-6 col-md-4 clickable" ng-repeat="product in addInvCtrl.products | filter:search:strict">
+						    	<div class="thumbnail">
+						      		<img src="{{product.img}}">
+						      		<div class="caption">
+						        		<strong>{{product.productName}}</strong>
+						        		<p><a class="btn btn-primary btn-block" role="button" ng-click="addInvCtrl.select(product)">Add Item</a></p>
+						      		</div>
+						    	</div>
+						  	</div>
+						</div>
+
+		              <fieldset class="form-group">
+		                <input type="submit" class="btn btn-primary pull-right" value="Save Invoice"/>
+	 	              </fieldset>
+
+		            </form>
+
+		      	</div>
+		    </div>
+		</section>
+	</body>
+
+</html> 
