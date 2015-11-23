@@ -31,8 +31,7 @@
         this.selected = {};
         this.select = function(item){
           item.totalPrice = item.price * item.quantity;
-
-          console.log(item.totalPrice)
+          // console.log(item.totalPrice)
           if(this.selected[item.id])
             item.quantity++;
           else
@@ -44,9 +43,15 @@
           }
         };
 
+        // Remove Items from Selected List
+        this.removeSelected = function(itemId){
+          delete this.selected[itemId];
+        };
+
         this.addInvoice = function(){
-          if(this.invoice.totalPrice != 0){
-            console.log(sales);
+          if(Object.keys(this.selected).length > 0){
+            this.invoice.lineItems = this.selected;
+            // console.log(sales);
             sales.push(this.invoice);
             this.invoice = {};
             this.selected = {};
@@ -61,32 +66,32 @@
     var sales = [{
       customerName: 'Elon Musk',
       invoiceNmbr: 89876,
-      totalPrice: 110.50,
+      totalPrice: 409.50,
       createdOn: 1397490980837,
       lineItems: [{
         id: 1,
         productName: 'Azurite',
         price: 110.50,
-        quantity: 5
+        quantity: 2
       }, {
-        id : 2,
-        productName: 'Blood Diamond',
-        price: 110.50,
-        quantity: 5        
+        id : 3,
+        productName: 'Zircon',
+        price: 188.50,
+        quantity: 1        
       }]
     }, {
       customerName: 'Nicola Tesla',
       invoiceNmbr: 82468,
-      totalPrice: 110.50,
+      totalPrice: 764,
       createdOn: 1397490980837,
       lineItems: [{
         productName: 'Azurite',
         price: 110.50,
         quantity: 5        
       }, {
-        productName: 'Blood Diamond',
-        price: 110.50,
-        quantity: 5        
+        productName: 'BloodStone',
+        price: 70.50,
+        quantity: 3        
       }]
     }];
 
@@ -98,10 +103,16 @@
       price: 70.23
     }, {
       id: 2,
-      productName: 'Blood Diamond',
+      productName: 'BloodStone',
       img: 'img/gem-02.gif',
       quantity: 1,
       price: 110.10
+    }, {
+      id: 3,
+      productName: 'Zircon',
+      img: 'img/gem-03.gif',
+      quantity: 1,
+      price: 188.50
     }];
 
 })();

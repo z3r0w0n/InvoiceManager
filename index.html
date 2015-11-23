@@ -2,11 +2,12 @@
 <html ng-app="invoiceMan">
 	<head>
 		<title>SteelBrick - Invoice Manager</title>
-
-		<link rel="stylesheet" href="style.css" />
 		
 		<!-- Bootstrap CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="style.css" />
 
 		<!-- AngularJS CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
@@ -39,6 +40,21 @@
 					    <!--  Invoice Container  -->
 					    <div class="list-group-item" ng-repeat="invoice in invoiceCtrl.invoices">
 					      <h3>INV#{{invoice.invoiceNmbr}} <small>{{invoice.customerName}}</small> <em class="pull-right">{{invoice.totalPrice | currency}}</em></h3>
+					      <table class="table">
+					      	<tr>
+						      	<th width="30%">Product</th>
+					      		<th width="30%">Quantity</th>
+					      		<th width="30%">Price per unit</th>
+					      		<th>Total</th>
+					      	</tr>
+
+					      	<tr ng-repeat="item in invoice.lineItems">
+					      		<td width="30%">{{item.productName}}</td>
+					      		<td width="30%">{{item.quantity}}</td>
+					      		<td width="30%">{{item.price | currency}}<span class="text-muted"> per unit</span></td>
+					      		<td>{{item.price * item.quantity | currency}}</td>
+					      	</tr>
+					      </table>
 					    </div>
 				    </div>
 
@@ -75,12 +91,30 @@
 
 		              <!-- {{addInvCtrl.totalPrice | currency}} -->
 
-			            <table class="table">
-			            	<tr class="list-group-item" ng-repeat="addedItem in addInvCtrl.selected">
-			            		<td width="40%"> {{addedItem.productName}} </td>
-			              		<td width="20%"><input type="number" min=1 ng-model="addedItem.quantity"></td>
-			             		<td width="20%"><input type="text" name="price" pattern="^\d*(\.\d{1,2}$)?" size="4" title="Price of product - Please enter proper Currency format (Ex: 12, 12.04)" ng-model="addedItem.price"></td>
+			            <table class="table" ng-show="{{addInvCtrl.selected}}">
+			            	<!-- <tr>
+						      	<th width="30%">Product</th>
+					      		<th width="20%">Quantity</th>
+					      		<th width="20%">Price per unit</th>
+					      		<th>Total</th>
+					      		<th></th>
+					      	</tr> -->
+			            	<tr ng-repeat="addedItem in addInvCtrl.selected">
+			            		<td width="20%"> {{addedItem.productName}} </td>
+			              		<td width="30%">
+			              			<div class="input-group">
+  										<div class="input-group-addon">Quantity</div>
+  										<input class="form-control" type="number" min=1 ng-model="addedItem.quantity">
+      								</div>
+      							</td>
+			             		<td width="20%">
+			             			    <div class="input-group">
+      										<div class="input-group-addon">$</div>
+			             					<input class="form-control" type="text" name="price" pattern="^\d*(\.\d{1,2}$)?" size="4" title="Price of product - Please enter proper Currency format (Ex: 12, 12.04)" ng-model="addedItem.price">
+			             				</div>
+			             		</td>
 			             		<td width="20%">{{addedItem.price * addedItem.quantity | currency}}</td>
+			             		<td width="10%"><a role="button" ng-click="addInvCtrl.removeSelected(addedItem.id)"><img src="img/del.png" title="Remove Item" height="20"></img></a></td>
 			              	</tr>
 			            </table>
 
@@ -94,7 +128,7 @@
 				        	</div>
 						    <div class="col-sm-6 col-md-4 clickable" ng-repeat="product in addInvCtrl.products | filter:search:strict">
 						    	<div class="thumbnail">
-						      		<img src="{{product.img}}">
+						      		<img class="item-img" src="{{product.img}}">
 						      		<div class="caption">
 						        		<strong>{{product.productName}}</strong>
 						        		<p><a class="btn btn-primary btn-block" role="button" ng-click="addInvCtrl.select(product)">Add Item</a></p>
