@@ -13,4 +13,7 @@ Few Assumptions made:
 * Invoice Number has to be exactly 5 digits
 * The Date field in the Invoice Creation form is not restricted (no Max or Min Date specified)
 
+Known Bugs:
+* Date Field validation in Mozilla
+
 > Works best in Google Chrome
