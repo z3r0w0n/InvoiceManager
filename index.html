@@ -39,7 +39,12 @@
 		      		<div class="list-group">
 					    <!--  Invoice Container  -->
 					    <div class="list-group-item" ng-repeat="invoice in invoiceCtrl.invoices">
-					      <h3>INV#{{invoice.invoiceNmbr}} <small>{{invoice.customerName}}</small> <em class="pull-right">{{invoice.totalPrice | currency}}</em></h3>
+					      <h3>INV#{{invoice.invoiceNmbr}} <em class="pull-right">{{invoice.totalPrice | currency}}</em></h3>
+					      <strong>
+					      	Customer Name: {{invoice.customerName}} <br/>
+					      	Date: {{invoice.createdOn | date}}
+					      </strong>
+
 					      <table class="table">
 					      	<tr>
 						      	<th width="30%">Product</th>
@@ -67,23 +72,13 @@
 		      	<div name="invoice-form" ng-show="tab.isSet(2)">
 		      		<form name="invoiceForm" ng-controller="CreateInvController as addInvCtrl"
 		      									ng-submit = "addInvCtrl.addInvoice(invoice)">
-		              
-		              <!--  Live Preview -->
-		              <!-- <h4>Preview:</h4>
-		              <blockquote>
-		                <strong>#{{addInvCtrl.invoice.invoiceNmbr}}</strong>
-		                {{addInvCtrl.invoice.customerName}} {{addInvCtrl.invoice.createdOn |date}}
-		                <cite class="clearfix">-{{addInvCtrl.invoice.totalPrice}}</cite>
-		                <div>{{addInvCtrl.invoice.lineItems}}</div>
-		              </blockquote> -->
-
 		              <!--  Invoice Form -->
 		              <h4>Create an Invoice</h4>
 		              <fieldset class="form-group">
-		                <input ng-model="addInvCtrl.invoice.customerName" type="text" class="form-control" placeholder="Customer Name" title="Name" required/>
+		                <input ng-model="addInvCtrl.invoice.customerName" type="text" class="form-control" placeholder="Customer Name" title="Customer Name" required/>
 		              </fieldset>
 		              <fieldset class="form-group">
-		                <input ng-model="addInvCtrl.invoice.createdOn" type="date" class="form-control" placeholder="yyyy-MM-dd" required/>
+		                <input ng-model="addInvCtrl.invoice.createdOn" type="date" class="form-control" placeholder="Date (yyyy-MM-dd)" required/>
 		              </fieldset>
 		              <fieldset class="form-group">
 		                <input ng-model="addInvCtrl.invoice.invoiceNmbr" type="text" pattern='\d{5}' class="form-control" placeholder="5 - digit Invoice number" title="Invoice Number" required/>
@@ -92,13 +87,6 @@
 		              <!-- {{addInvCtrl.totalPrice | currency}} -->
 
 			            <table class="table" ng-show="{{addInvCtrl.selected}}">
-			            	<!-- <tr>
-						      	<th width="30%">Product</th>
-					      		<th width="20%">Quantity</th>
-					      		<th width="20%">Price per unit</th>
-					      		<th>Total</th>
-					      		<th></th>
-					      	</tr> -->
 			            	<tr ng-repeat="addedItem in addInvCtrl.selected">
 			            		<td width="20%"> {{addedItem.productName}} </td>
 			              		<td width="30%">

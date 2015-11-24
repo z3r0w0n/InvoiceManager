@@ -5,10 +5,6 @@
         this.invoices = sales;
     });
 
-    app.controller('ProductController', function(){
-        this.products = items;
-    });
-
     app.controller("TabController", function() {
         this.tab = 1;
 
@@ -30,17 +26,18 @@
 
         this.selected = {};
         this.select = function(item){
+          
+          // reset errors, if previously set
+          this.errors = [];
+          
+          // Calculating totalPrice of the added item
           item.totalPrice = item.price * item.quantity;
-          // console.log(item.totalPrice)
+          
+          // If the selected item already exists in the list
           if(this.selected[item.id])
             item.quantity++;
           else
             this.selected[item.id]=item;
-
-          // this.invoice.totalPrice = 0;
-          for(var s in this.selected){
-             this.invoice.totalPrice += this.selected[s].totalPrice;
-          }
         };
 
         // Remove Items from Selected List
@@ -48,11 +45,21 @@
           delete this.selected[itemId];
         };
 
+        // Add Invoice to sales list
         this.addInvoice = function(){
+          // Validating to check if AT LEAST ONE item is selected
           if(Object.keys(this.selected).length > 0){
             this.invoice.lineItems = this.selected;
-            // console.log(sales);
+
+            // Calculating Total Price of all the items
+            for(var s in this.selected){
+              this.invoice.totalPrice += this.selected[s].price*this.selected[s].quantity;
+            }
+
+            // Saving the current Invoice
             sales.push(this.invoice);
+
+            // Reset all objects
             this.invoice = {};
             this.selected = {};
             this.errors=[];
