@@ -38,7 +38,7 @@
 		      		<p class="text-center">Previous Invoices</p>
 		      		<div class="list-group">
 					    <!--  Invoice Container  -->
-					    <div class="list-group-item" ng-repeat="invoice in invoiceCtrl.invoices">
+					    <div class="list-group-item" ng-repeat="invoice in invoiceCtrl.invoices | orderBy:'-createdOn'">
 					      <h3>INV#{{invoice.invoiceNmbr}} <em class="pull-right">{{invoice.totalPrice | currency}}</em></h3>
 					      <strong>
 					      	Customer Name: {{invoice.customerName}} <br/>
