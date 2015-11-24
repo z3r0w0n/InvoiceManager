@@ -12,3 +12,5 @@ This simple application lets the user -
 Few Assumptions made:
 * Invoice Number has to be exactly 5 digits
 * The Date field in the Invoice Creation form is not restricted (no Max or Min Date specified)
+
+> Works best in Google Chrome
